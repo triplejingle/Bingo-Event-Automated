@@ -25,14 +25,7 @@ public class EventClient {
     Gson gson;
     @Inject
     DrawManager drawManager;
-    public EventClient(){
-        if(client==null) {
-            client = new OkHttpClient
-                    .Builder()
-                    .retryOnConnectionFailure(true)
-                    .build();
-        }
-    }
+
 
     @Inject
     IEventConfig eventConfig;
