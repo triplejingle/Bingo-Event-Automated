@@ -1,4 +1,4 @@
-An plugin to play an automated bingo. Currently in alpha stage.
+An BE Active NL plugin to play an automated bingo. 
 -features
 Sends loot to the configurable server. 
 Send screenshot to Discord; only when an item has been crossed off.
@@ -31,8 +31,5 @@ Discord webhook: The url to send the screenshots to.
 
 
 This consists of the username, eventcode, itemsource and items.
- public String username;
-    public String eventcode;
-    public String itemsource;
-    public List<String> items = new ArrayList<>();
+
 
