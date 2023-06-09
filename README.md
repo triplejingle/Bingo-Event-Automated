@@ -1,7 +1,9 @@
 An plugin to play an automated bingo. Currently in alpha stage.
 -features
-Sends loot to the configurable server and Discord. 
-Dynamic configuration. The configuration can be send from the server to the client.
+Sends loot to the configurable server. 
+Send screenshot to Discord; only when an item has been crossed off.
+Dynamic configuration. 
+The configuration can be send from the server to the client.
 
 -restriction
 Only supports:
