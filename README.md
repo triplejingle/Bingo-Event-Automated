@@ -9,21 +9,15 @@ Build specificly for the [BE Active NL] clanchat.
 - The configuration can be send from the server to the client.
 - Partial anti cheat.
 
-# restriction
+## restriction
 Only supports:
 -Npcs which drop loot on the ground. Goblin, Graardor for example.
--Loot from chests:
-1 Barrows
-2 COX
-3 TOB
-4 TOA
-5 Fishing Trawler
-6 Wilderniss Loot Chest
+-Loot from Barrows, COX, TOB, TOA, Fishing Trawler, Wilderniss Loot Chest
 
-# requirements to use
+## requirements to use
 Your own deployed backend, database and frontend to display the data.
 
-# setup for users
+## setup for users
 To use the plugin the user has to configure it correctly.
 Send data to: The url to send the data to. 
 Dynamic configuration url: The url to get the configuration.
