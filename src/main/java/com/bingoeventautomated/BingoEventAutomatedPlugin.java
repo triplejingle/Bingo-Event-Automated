@@ -22,7 +22,8 @@ import javax.inject.Inject;
 
 @Slf4j
 @PluginDescriptor(
-        name = "BAN plugin"
+        name = "Bingo Event Automated",
+        description="To send bingo items to the server."
 )
 public class BingoEventAutomatedPlugin extends Plugin {
     @Inject
