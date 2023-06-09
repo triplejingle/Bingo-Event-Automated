@@ -1,4 +1,4 @@
-An BE Active NL plugin to play an automated bingo. 
+A plugin to play an automated bingo for the clan n BE Active NL.
 -features
 Sends loot to the configurable server. 
 Send screenshot to Discord; only when an item has been crossed off.
