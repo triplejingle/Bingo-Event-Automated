@@ -7,7 +7,7 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 
 public class PlayerEvent {
-    public static ArrayList<String> playerDroppeditems = new ArrayList<String>();
+    public static ArrayList<String> playerDroppeditems = new ArrayList<>();
     @Inject
     ItemManager itemManager;
 

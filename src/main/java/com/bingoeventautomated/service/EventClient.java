@@ -87,11 +87,13 @@ public class EventClient {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if(response.code()==200){
-                    String responseBody =response.body().string();
-                    ActionResult actionResult =GSON.fromJson(responseBody, ActionResult.class);
+                    if(response.body()!=null){
+                        String responseBody =response.body().string();
+                        ActionResult actionResult =GSON.fromJson(responseBody, ActionResult.class);
 
-                    if(actionResult.isMessageSet){
-                        SendImage(actionResult.message);
+                        if(actionResult.isMessageSet){
+                            SendImage(actionResult.message);
+                        }
                     }
                 }
             }
@@ -125,9 +127,8 @@ public class EventClient {
 
     public byte[] CreateImage(BufferedImage image) {
         byte[] imageBytes= null;
-        BufferedImage bufferedImage = (BufferedImage) image;
         try {
-            imageBytes = convertImageToByteArray(bufferedImage);
+            imageBytes = convertImageToByteArray(image);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -180,7 +181,7 @@ public class EventClient {
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
+            public void onResponse(Call call, Response response) {
 
             }
         };

@@ -17,9 +17,9 @@ import java.util.stream.Collectors;
 
 public class ActionDataModelMapper {
     @Inject
-    private ItemManager itemManager;
+    ItemManager itemManager;
     @Inject
-    private Client client;
+    Client client;
     @Inject
     IEventConfig eventconfig;
     public ActionDataModel ToActionData(final NpcLootReceived npcLootReceived){
@@ -77,18 +77,21 @@ public class ActionDataModelMapper {
         ActionDataModel actionData = new ActionDataModel();
         actionData.itemsource = itemsource;
         ItemContainer container = this.client.getItemContainer(inventoryID);
+        try {
+            Collection<ItemStack> items = Arrays.stream(container.getItems()).filter((item) -> {
+                return item.getId() > 0;
+            }).map((item) -> {
+                return new ItemStack(item.getId(), item.getQuantity(), this.client.getLocalPlayer().getLocalLocation());
+            }).collect(Collectors.toList());
 
-        Collection<ItemStack> items = (Collection) Arrays.stream(container.getItems()).filter((item) -> {
-            return item.getId() > 0;
-        }).map((item) -> {
-            return new ItemStack(item.getId(), item.getQuantity(), this.client.getLocalPlayer().getLocalLocation());
-        }).collect(Collectors.toList());
-
-        Iterator iterator = items.iterator();
-        while(iterator.hasNext()) {
-            ItemStack itemStack = (ItemStack)iterator.next();
-            String name = this.itemManager.getItemComposition(itemStack.getId()).getName();
-            actionData.items.add(name);
+            Iterator iterator = items.iterator();
+            while (iterator.hasNext()) {
+                ItemStack itemStack = (ItemStack) iterator.next();
+                String name = this.itemManager.getItemComposition(itemStack.getId()).getName();
+                actionData.items.add(name);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
 
         return actionData;
