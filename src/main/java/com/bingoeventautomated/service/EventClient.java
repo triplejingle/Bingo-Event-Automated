@@ -19,7 +19,10 @@ import java.util.Objects;
 import static net.runelite.http.api.RuneLiteAPI.GSON;
 
 public class EventClient {
-    private static OkHttpClient client;
+    @Inject
+    OkHttpClient client;
+    @Inject
+    Gson gson;
     @Inject
     DrawManager drawManager;
     public EventClient(){
@@ -68,7 +71,7 @@ public class EventClient {
                 String body = response.body().string();
                 Type type = new TypeToken<List<String>>() {
                 }.getType();
-                return GSON.fromJson(body, type);
+                return gson.fromJson(body, type);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -77,7 +80,6 @@ public class EventClient {
     }
 
     private String ConvertToBody(ActionDataModel actionData) {
-        Gson gson = new Gson();
         return gson.toJson(actionData);
     }
 
@@ -93,7 +95,7 @@ public class EventClient {
                 if(response.code()==200){
                     if(response.body()!=null){
                         String responseBody =response.body().string();
-                        ActionResult actionResult =GSON.fromJson(responseBody, ActionResult.class);
+                        ActionResult actionResult =gson.fromJson(responseBody, ActionResult.class);
 
                         if(actionResult.isMessageSet){
                             SendImage(actionResult.message);
@@ -107,13 +109,13 @@ public class EventClient {
 
     private void MakeAsyncCall( String body, Callback callback) {
         RequestBody requestBody = RequestBody
-                .create(
-                        MediaType.get("application/json; charset=utf-8"),
-                        body
-                );
-        Request request = new Request.Builder()
-                .url(eventConfig.urlInput())
-                .post(requestBody)
+                    .create(
+                            MediaType.get("application/json; charset=utf-8"),
+                            body
+                    );
+            Request request = new Request.Builder()
+                    .url(eventConfig.urlInput())
+                    .post(requestBody)
                 .build();
         Call call =client.newCall(request);
         call.enqueue(callback);
@@ -152,7 +154,7 @@ public class EventClient {
 
         MultipartBody.Builder requestBodyBuilder = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
-                .addFormDataPart("payload_json", GSON.toJson(discordWebhookBody));
+                .addFormDataPart("payload_json", gson.toJson(discordWebhookBody));
 
         requestBodyBuilder.addFormDataPart("file", "image.png",
                 RequestBody.create(MediaType.parse("image/png"), imageBytes));
