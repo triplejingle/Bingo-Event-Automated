@@ -16,7 +16,7 @@ public class PlayerEvent {
         int itemId = event.getItemId();
         if (menuOption.equals("Drop")) {
             String item = this.itemManager.getItemComposition(itemId).getName();
-            this.playerDroppeditems.add(item);
+            playerDroppeditems.add(item);
             return;
         }
 
@@ -25,7 +25,7 @@ public class PlayerEvent {
             for(int i = 0; i< playerDroppeditems.size(); i++){
                 String item = playerDroppeditems.get(i);
                 if (itemTaken.contains(item)) {
-                    this.playerDroppeditems.remove(item);
+                    playerDroppeditems.remove(item);
                 }
             }
         }

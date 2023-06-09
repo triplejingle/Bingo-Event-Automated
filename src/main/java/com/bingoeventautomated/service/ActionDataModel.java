@@ -19,9 +19,6 @@ public class ActionDataModel {
         if(itemsource==null){
             return false;
         }
-        if(items.size()==0){
-            return false;
-        }
-        return true;
+        return items.size() != 0;
     }
 }

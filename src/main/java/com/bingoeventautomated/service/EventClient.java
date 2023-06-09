@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static net.runelite.http.api.RuneLiteAPI.GSON;
 
@@ -39,7 +40,7 @@ public class EventClient {
         }
 
         HttpUrl.Builder urlBuilder
-                = HttpUrl.parse(eventConfig.GetDynamicConfigUrl()).newBuilder();
+                = Objects.requireNonNull(HttpUrl.parse(eventConfig.GetDynamicConfigUrl())).newBuilder();
         urlBuilder.addQueryParameter("eventcode", actionData.eventcode);
 
         ArrayList<String> itemsources = GetAll(urlBuilder);
@@ -63,9 +64,12 @@ public class EventClient {
         Call call = client.newCall(request);
         try {
             Response response = call.execute();
-            String body = response.body().string();
-            Type type =  new TypeToken<List<String>>(){}.getType();
-            return GSON.fromJson(body,type);
+            if(response.body()!=null) {
+                String body = response.body().string();
+                Type type = new TypeToken<List<String>>() {
+                }.getType();
+                return GSON.fromJson(body, type);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -160,7 +164,7 @@ public class EventClient {
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
+            public void onResponse(Call call, Response response) {
 
             }
         };

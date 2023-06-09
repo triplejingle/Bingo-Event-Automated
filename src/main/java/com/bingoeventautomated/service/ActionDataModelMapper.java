@@ -78,17 +78,19 @@ public class ActionDataModelMapper {
         actionData.itemsource = itemsource;
         ItemContainer container = this.client.getItemContainer(inventoryID);
         try {
-            Collection<ItemStack> items = Arrays.stream(container.getItems()).filter((item) -> {
-                return item.getId() > 0;
-            }).map((item) -> {
-                return new ItemStack(item.getId(), item.getQuantity(), this.client.getLocalPlayer().getLocalLocation());
-            }).collect(Collectors.toList());
+            if(container!=null) {
+                Collection<ItemStack> items = Arrays.stream(container.getItems()).filter((item) -> {
+                    return item.getId() > 0;
+                }).map((item) -> {
+                    return new ItemStack(item.getId(), item.getQuantity(), this.client.getLocalPlayer().getLocalLocation());
+                }).collect(Collectors.toList());
 
-            Iterator iterator = items.iterator();
-            while (iterator.hasNext()) {
-                ItemStack itemStack = (ItemStack) iterator.next();
-                String name = this.itemManager.getItemComposition(itemStack.getId()).getName();
-                actionData.items.add(name);
+                Iterator iterator = items.iterator();
+                while (iterator.hasNext()) {
+                    ItemStack itemStack = (ItemStack) iterator.next();
+                    String name = this.itemManager.getItemComposition(itemStack.getId()).getName();
+                    actionData.items.add(name);
+                }
             }
         }catch (Exception e){
             e.printStackTrace();
