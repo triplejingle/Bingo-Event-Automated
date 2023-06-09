@@ -88,7 +88,6 @@ public class EventClient {
             public void onResponse(Call call, Response response) throws IOException {
                 if(response.code()==200){
                     String responseBody =response.body().string();
-                    System.out.println(responseBody);
                     ActionResult actionResult =GSON.fromJson(responseBody, ActionResult.class);
 
                     if(actionResult.isMessageSet){
@@ -178,7 +177,6 @@ public class EventClient {
             @Override
             public void onFailure(Call call, IOException e) {
                 e.printStackTrace();
-                System.out.println("something went wrong");
             }
 
             @Override

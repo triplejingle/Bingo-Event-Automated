@@ -46,7 +46,6 @@ public class ActionDataModelMapper {
     }
 
     public ActionDataModel ToActionData(int chestId) {
-        System.out.println("chestId:"+ chestId);
         ActionDataModel actionData =new ActionDataModel();
         switch (chestId)
         {

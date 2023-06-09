@@ -16,7 +16,6 @@ public class PlayerEvent {
         int itemId = event.getItemId();
         if (menuOption.equals("Drop")) {
             String item = this.itemManager.getItemComposition(itemId).getName();
-            System.out.println(item);
             this.playerDroppeditems.add(item);
             return;
         }
@@ -29,7 +28,6 @@ public class PlayerEvent {
                     this.playerDroppeditems.remove(item);
                 }
             }
-            return;
         }
     }
 }
