@@ -49,3 +49,4 @@ When there's a message available the message will be used to send a screenshot t
 # Future
 - Add caching so it won't unneccesarely send data to the server.
 - Add different loot sources: hespory, cluescrolls etc
+- Check for itemstacks. To prevent people stacking cluescrolls or other items beforehand.
