@@ -54,7 +54,7 @@ public class EventClient {
 
         ArrayList<String> itemsources = GetAll(urlBuilder,CacheKeys.ITEMSOURCES);
 
-        if(!itemsources.contains(actionData.itemsource))
+        if(!itemsources.contains(actionData.itemsource)&&itemsources.size()>0)
             return;
 
         String body = ConvertToBody(actionData);
