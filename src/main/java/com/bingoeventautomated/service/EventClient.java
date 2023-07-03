@@ -1,6 +1,9 @@
 package com.bingoeventautomated.service;
 
 import com.bingoeventautomated.config.IEventConfig;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import net.runelite.client.ui.DrawManager;
@@ -15,8 +18,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
-import static net.runelite.http.api.RuneLiteAPI.GSON;
+import java.util.concurrent.TimeUnit;
 
 public class EventClient {
     @Inject
@@ -26,20 +28,31 @@ public class EventClient {
     @Inject
     DrawManager drawManager;
 
-
     @Inject
     IEventConfig eventConfig;
+
+    private final Cache<CacheKeys, ArrayList<String>> configCache;
+
+    public EventClient(){
+        int maxSize = 1000;
+        int nrOfHours= 1;
+        configCache = CacheBuilder.newBuilder()
+                .maximumSize(maxSize)
+                .expireAfterWrite(nrOfHours, TimeUnit.HOURS)
+                .build();
+    }
+
+
     public void SendActionData(ActionDataModel actionData) {
         boolean isActionDataSet = actionData.IsSet();
         if(!isActionDataSet){
             return;
         }
-
         HttpUrl.Builder urlBuilder
                 = Objects.requireNonNull(HttpUrl.parse(eventConfig.GetDynamicConfigUrl())).newBuilder();
         urlBuilder.addQueryParameter("eventcode", actionData.eventcode);
 
-        ArrayList<String> itemsources = GetAll(urlBuilder);
+        ArrayList<String> itemsources = GetAll(urlBuilder,CacheKeys.ITEMSOURCES);
 
         if(!itemsources.contains(actionData.itemsource))
             return;
@@ -51,20 +64,30 @@ public class EventClient {
             SendPostRequest(body);
         }
     }
-    public ArrayList<String> GetAll(HttpUrl.Builder urlBuilder){
+
+    public ArrayList<String> GetAll(HttpUrl.Builder urlBuilder, CacheKeys cacheKey){
+        ArrayList<String> config =configCache.getIfPresent(cacheKey);
+        if(config!=null){
+            return config;
+        }
+
         String url = urlBuilder.build().toString();
 
         Request request = new Request.Builder()
                 .url(url)
                 .build();
+
         Call call = client.newCall(request);
+
         try {
             Response response = call.execute();
             if(response.body()!=null) {
                 String body = response.body().string();
                 Type type = new TypeToken<List<String>>() {
                 }.getType();
-                return gson.fromJson(body, type);
+                ArrayList<String> json  = gson.fromJson(body, type);
+                configCache.put(cacheKey, json);
+                return json;
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -107,6 +130,7 @@ public class EventClient {
                             body
                     );
             Request request = new Request.Builder()
+                    .cacheControl(CacheControl.FORCE_CACHE)
                     .url(eventConfig.urlInput())
                     .post(requestBody)
                 .build();
