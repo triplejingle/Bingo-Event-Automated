@@ -130,7 +130,6 @@ public class EventClient {
                             body
                     );
             Request request = new Request.Builder()
-                    .cacheControl(CacheControl.FORCE_CACHE)
                     .url(eventConfig.urlInput())
                     .post(requestBody)
                 .build();
