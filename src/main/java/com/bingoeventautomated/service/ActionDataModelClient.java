@@ -55,7 +55,6 @@ public class ActionDataModelClient extends BEAClientBase {
         //setting screenshot like allows the expansion of sending multiple screenshots (will be added in the future)
         //do not remove otherwise the sreenshot variable in discordclient has to become static. Which is undesirable.
         discordClient.SetScreenshot();
-        System.out.println("setting screenshot");
     }
 
     public void RemoveScreenshot() {
