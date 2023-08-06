@@ -7,26 +7,34 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 
 public class PlayerEvent {
-    public static ArrayList<String> playerDroppeditems = new ArrayList<>();
+    public static ArrayList<String> invalidItems = new ArrayList<>();
     @Inject
-    ItemManager itemManager;
+    private ItemManager itemManager;
 
-    public void UpdateDroppedItemList(MenuOptionClicked event) {
+    public void UpdateInvalidItemList(MenuOptionClicked event) {
         String menuOption = event.getMenuOption();
-        int itemId = event.getItemId();
-        if (menuOption.equals("Drop")) {
-            String item = this.itemManager.getItemComposition(itemId).getName();
-            playerDroppeditems.add(item);
-            return;
-        }
+        AddDroppedItemToInvalidItems(event, menuOption);
+        RemoveTakenItemFromInvalidItems(event, menuOption);
+    }
 
-        String itemTaken =event.getMenuTarget();
-        if (menuOption.equals("Take")) {
-            for(int i = 0; i< playerDroppeditems.size(); i++){
-                String item = playerDroppeditems.get(i);
-                if (itemTaken.contains(item)) {
-                    playerDroppeditems.remove(item);
-                }
+    private void AddDroppedItemToInvalidItems(MenuOptionClicked event, String menuOption) {
+        if (!menuOption.equals("Drop"))
+            return;
+
+        int itemId = event.getItemId();
+        String item = this.itemManager.getItemComposition(itemId).getName();
+        invalidItems.add(item);
+    }
+
+    private void RemoveTakenItemFromInvalidItems(MenuOptionClicked event, String menuOption) {
+        if (!menuOption.equals("Take"))
+            return;
+
+        String itemTaken = event.getMenuTarget();
+        for (int i = 0; i < invalidItems.size(); i++) {
+            String item = invalidItems.get(i);
+            if (itemTaken.contains(item)) {
+                invalidItems.remove(item);
             }
         }
     }

@@ -3,20 +3,17 @@ package com.bingoeventautomated.service;
 import lombok.Data;
 
 @Data
-class DiscordWebhookBody
-{
+class DiscordChatMessageModel {
     private String content;
     private Embed embed;
 
     @Data
-    static class Embed
-    {
+    static class Embed {
         final UrlEmbed image;
     }
 
     @Data
-    static class UrlEmbed
-    {
+    static class UrlEmbed {
         final String url;
     }
 }

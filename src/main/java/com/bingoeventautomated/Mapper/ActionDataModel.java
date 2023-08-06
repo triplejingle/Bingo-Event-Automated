@@ -1,4 +1,4 @@
-package com.bingoeventautomated.service;
+package com.bingoeventautomated.Mapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,16 +7,16 @@ public class ActionDataModel {
     public String username;
     public String eventcode;
     public String itemsource;
-    public List<String> items = new ArrayList<>();
+    public List<ActionDataItem> items = new ArrayList<>();
 
     public boolean IsSet() {
-        if(username== null){
+        if (username == null) {
             return false;
         }
-        if(eventcode==null){
+        if (eventcode == null) {
             return false;
         }
-        if(itemsource==null){
+        if (itemsource == null) {
             return false;
         }
         return items.size() != 0;
