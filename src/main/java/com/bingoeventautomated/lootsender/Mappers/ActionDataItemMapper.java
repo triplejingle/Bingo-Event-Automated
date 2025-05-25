@@ -1,5 +1,6 @@
-package com.bingoeventautomated.Mapper;
+package com.bingoeventautomated.lootsender.Mappers;
 
+import com.bingoeventautomated.lootsender.models.ActionDataItem;
 import net.runelite.client.game.ItemManager;
 import net.runelite.client.game.ItemStack;
 
@@ -13,7 +14,7 @@ public class ActionDataItemMapper {
         return itemManager.getItemComposition(itemId).getName();
     }
 
-    public ActionDataItem ToActionDataItem(ItemStack item) {
+    public ActionDataItem toActionDataItem(ItemStack item) {
         String itemName = getItemName(item.getId());
         ActionDataItem actionDataItem = new ActionDataItem();
         actionDataItem.name = itemName;

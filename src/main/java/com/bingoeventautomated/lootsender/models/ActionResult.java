@@ -1,4 +1,4 @@
-package com.bingoeventautomated.service;
+package com.bingoeventautomated.lootsender.models;
 
 import lombok.Data;
 

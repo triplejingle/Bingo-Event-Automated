@@ -1,13 +1,13 @@
-package com.bingoeventautomated.service;
+package com.bingoeventautomated.dynamicconfig;
 
+import com.bingoeventautomated.config.IEventConfig;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import okhttp3.Call;
-import okhttp3.HttpUrl;
-import okhttp3.Request;
-import okhttp3.Response;
+import okhttp3.*;
 
+import javax.inject.Inject;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -15,10 +15,17 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
-public class DynamicConfigClient extends BEAClientBase {
+public class BEADynamicConfigClient {
+    @Inject
+    protected OkHttpClient okHttpClient;
+    @Inject
+    protected IEventConfig eventConfig;
+    @Inject
+    protected Gson gson;
+
     private final Cache<CacheKeys, ArrayList<String>> configCache;
 
-    public DynamicConfigClient() {
+    public BEADynamicConfigClient() {
         int nrOfEntries = 1;
         int nrOfHours = 1;
         configCache = CacheBuilder.newBuilder()
@@ -27,20 +34,20 @@ public class DynamicConfigClient extends BEAClientBase {
                 .build();
     }
 
-    public ArrayList<String> GetDynamicConfiguration() {
+    public ArrayList<String> getDynamicConfiguration() {
         ArrayList<String> config = configCache.getIfPresent(CacheKeys.ITEMSOURCES);
         if (config != null) {
             return config;
         }
         HttpUrl.Builder urlBuilder
-                = Objects.requireNonNull(HttpUrl.parse(eventConfig.GetDynamicConfigUrl())).newBuilder();
+                = Objects.requireNonNull(HttpUrl.parse(eventConfig.getDynamicConfigUrl())).newBuilder();
         urlBuilder.addQueryParameter("eventcode", eventConfig.eventCodeInput());
 
-        ArrayList<String> configuration = GetConfig(urlBuilder, CacheKeys.ITEMSOURCES);
+        ArrayList<String> configuration = getConfig(urlBuilder, CacheKeys.ITEMSOURCES);
         return configuration;
     }
 
-    private ArrayList<String> GetConfig(HttpUrl.Builder urlBuilder, CacheKeys cacheKey) {
+    private ArrayList<String> getConfig(HttpUrl.Builder urlBuilder, CacheKeys cacheKey) {
         String url = urlBuilder.build().toString();
 
         Request request = new Request.Builder()
@@ -57,8 +64,10 @@ public class DynamicConfigClient extends BEAClientBase {
                 }.getType();
                 ArrayList<String> json = gson.fromJson(body, type);
                 configCache.put(cacheKey, json);
+                response.close();
                 return json;
             }
+            response.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

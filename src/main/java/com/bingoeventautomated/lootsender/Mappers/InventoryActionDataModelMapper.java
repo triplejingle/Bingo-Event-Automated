@@ -1,5 +1,7 @@
-package com.bingoeventautomated.Mapper;
+package com.bingoeventautomated.lootsender.Mappers;
 
+import com.bingoeventautomated.lootsender.models.ActionDataItem;
+import com.bingoeventautomated.lootsender.models.ActionDataModel;
 import com.bingoeventautomated.config.IEventConfig;
 import net.runelite.api.Client;
 import net.runelite.api.InventoryID;
@@ -23,7 +25,7 @@ public class InventoryActionDataModelMapper {
     ActionDataItemMapper actionDataItemMapper;
 
     //todo refactor so it conforms to dry
-    public String GetInventoryName(int widgetId) {
+    public String getInventoryName(int widgetId) {
         switch (widgetId) {
             case WidgetID.BARROWS_REWARD_GROUP_ID:
                 return "Barrows";
@@ -41,7 +43,7 @@ public class InventoryActionDataModelMapper {
         return "";
     }
     //todo refactor so it conforms to dry
-    public InventoryID GetWidgetId(int widgetId) {
+    public InventoryID getWidgetId(int widgetId) {
         switch (widgetId) {
             case WidgetID.BARROWS_REWARD_GROUP_ID:
                 return InventoryID.BARROWS_REWARD;
@@ -59,37 +61,36 @@ public class InventoryActionDataModelMapper {
         return null;
     }
 
-    public ActionDataModel Map(int widgetId) {
-        String inventoryName = GetInventoryName(widgetId);
+    public ActionDataModel map(int widgetId) {
+        String inventoryName = getInventoryName(widgetId);
         ActionDataModel actionData = new ActionDataModel();
-        InventoryID foundInventory = GetWidgetId(widgetId);
+        InventoryID foundInventory = getWidgetId(widgetId);
         if (foundInventory == null)
             return actionData;
 
-        actionData = InventoryToActionDataModel(foundInventory, inventoryName);
+        actionData = inventoryToActionDataModel(foundInventory, inventoryName);
         actionData.username = client.getLocalPlayer().getName();
         actionData.eventcode = eventconfig.eventCodeInput();
         return actionData;
     }
 
-    private ActionDataModel InventoryToActionDataModel(InventoryID inventoryID, String itemsource) {
+    private ActionDataModel inventoryToActionDataModel(InventoryID inventoryID, String itemsource) {
         ActionDataModel actionData = new ActionDataModel();
         actionData.itemsource = itemsource;
-        System.out.println(itemsource);
-        SetBingoTileItems(inventoryID, actionData);
+        setBingoTileItems(inventoryID, actionData);
         return actionData;
     }
 
-    private void SetBingoTileItems(InventoryID inventoryID, ActionDataModel actionData) {
+    private void setBingoTileItems(InventoryID inventoryID, ActionDataModel actionData) {
         try {
-            Collection<ItemStack> InventoryItemCollection = GetItemListFromInventory(inventoryID);
-            AddInventoryItemsToBingoTileItems(actionData, InventoryItemCollection);
+            Collection<ItemStack> InventoryItemCollection = getItemListFromInventory(inventoryID);
+            addInventoryItemsToBingoTileItems(actionData, InventoryItemCollection);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private Collection<ItemStack> GetItemListFromInventory(InventoryID inventoryID) {
+    private Collection<ItemStack> getItemListFromInventory(InventoryID inventoryID) {
         ItemContainer container = this.client.getItemContainer(inventoryID);
         Collection<ItemStack> items = new ArrayList<>();
         if (container != null) {
@@ -103,11 +104,11 @@ public class InventoryActionDataModelMapper {
         return items;
     }
 
-    private void AddInventoryItemsToBingoTileItems(ActionDataModel actionData, Collection<ItemStack> inventoryItemCollection) {
+    private void addInventoryItemsToBingoTileItems(ActionDataModel actionData, Collection<ItemStack> inventoryItemCollection) {
         Iterator iterator = inventoryItemCollection.iterator();
         while (iterator.hasNext()) {
             ItemStack itemStack = (ItemStack) iterator.next();
-            ActionDataItem actionDataItem = actionDataItemMapper.ToActionDataItem(itemStack);
+            ActionDataItem actionDataItem = actionDataItemMapper.toActionDataItem(itemStack);
             actionData.items.add(actionDataItem);
         }
     }

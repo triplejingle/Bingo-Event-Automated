@@ -1,6 +1,9 @@
-package com.bingoeventautomated.service;
+package com.bingoeventautomated.discord;
 
-import net.runelite.client.ui.DrawManager;
+
+import com.bingoeventautomated.config.IEventConfig;
+import com.bingoeventautomated.discord.models.DiscordChatMessageModel;
+import com.google.gson.Gson;
 import okhttp3.*;
 
 import javax.imageio.ImageIO;
@@ -9,16 +12,17 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.ArrayDeque;
-import java.util.Queue;
 
-public class BEADiscordClient extends BEAClientBase {
+public class BEADiscordClient {
     @Inject
-    private DrawManager drawManager;
-    private static Queue<Image> screenshots = new ArrayDeque<>();
+    protected OkHttpClient okHttpClient;
+    @Inject
+    protected IEventConfig eventConfig;
+    @Inject
+    protected Gson gson;
 
-    public void SendImageToDiscord(String message) {
-        byte[] imageBytes = CreateImage((BufferedImage) screenshots.peek());
+    public void sendToDiscord(String message, Image image) {
+        byte[] imageBytes = createImage((BufferedImage) image);
 
         DiscordChatMessageModel discordMessageModel = new DiscordChatMessageModel();
         discordMessageModel.setContent(message);
@@ -34,12 +38,12 @@ public class BEADiscordClient extends BEAClientBase {
         Callback callback = new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-
+                e.printStackTrace();
             }
 
             @Override
             public void onResponse(Call call, Response response) {
-
+                response.close();
             }
         };
 
@@ -51,7 +55,7 @@ public class BEADiscordClient extends BEAClientBase {
         call.enqueue(callback);
     }
 
-    private byte[] CreateImage(BufferedImage image) {
+    private byte[] createImage(BufferedImage image) {
         byte[] imageBytes = null;
         try {
             imageBytes = convertImageToByteArray(image);
@@ -65,18 +69,5 @@ public class BEADiscordClient extends BEAClientBase {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         ImageIO.write(bufferedImage, "png", byteArrayOutputStream);
         return byteArrayOutputStream.toByteArray();
-    }
-
-    public void SetScreenshot() {
-        drawManager.requestNextFrameListener(image ->
-        {
-            screenshots.add(image);
-        });
-    }
-
-    public void removeNextInLineScreenshot() {
-        if (screenshots.peek() != null) {
-            screenshots.remove();
-        }
     }
 }

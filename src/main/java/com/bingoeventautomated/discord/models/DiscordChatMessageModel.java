@@ -1,9 +1,9 @@
-package com.bingoeventautomated.service;
+package com.bingoeventautomated.discord.models;
 
 import lombok.Data;
 
 @Data
-class DiscordChatMessageModel {
+public class DiscordChatMessageModel {
     private String content;
     private Embed embed;
 

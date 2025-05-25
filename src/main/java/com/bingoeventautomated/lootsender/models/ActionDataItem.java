@@ -1,4 +1,4 @@
-package com.bingoeventautomated.Mapper;
+package com.bingoeventautomated.lootsender.models;
 
 import lombok.Getter;
 import lombok.Setter;

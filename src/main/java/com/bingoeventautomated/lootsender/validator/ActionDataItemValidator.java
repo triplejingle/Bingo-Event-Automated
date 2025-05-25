@@ -1,8 +1,8 @@
-package com.bingoeventautomated.validator;
+package com.bingoeventautomated.lootsender.validator;
 
-import com.bingoeventautomated.Mapper.ActionDataItem;
-import com.bingoeventautomated.Mapper.ActionDataModel;
-import com.bingoeventautomated.events.PlayerEvent;
+import com.bingoeventautomated.lootsender.models.ActionDataItem;
+import com.bingoeventautomated.lootsender.models.ActionDataModel;
+import com.bingoeventautomated.playerevent.PlayerEvent;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -10,11 +10,11 @@ import java.util.Iterator;
 public class ActionDataItemValidator {
     public ActionDataModel validate(ActionDataModel actionData) {
         ArrayList<String> invalidItemList = PlayerEvent.invalidItems;
-        actionData.items = ExtractValidItems(actionData, invalidItemList);
+        actionData.items = extractValidItems(actionData, invalidItemList);
         return actionData;
     }
 
-    private ArrayList ExtractValidItems(ActionDataModel actionData, ArrayList<String> invalidItemList) {
+    private ArrayList extractValidItems(ActionDataModel actionData, ArrayList<String> invalidItemList) {
         ArrayList validItemList = new ArrayList();
         Iterator iterator = actionData.items.iterator();
         while (iterator.hasNext()) {

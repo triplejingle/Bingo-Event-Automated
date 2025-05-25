@@ -22,7 +22,7 @@ public interface IEventConfig extends Config {
             name = "Dynamic configuration url",
             description = "The url of the server to set the dynamic config."
     )
-    default String GetDynamicConfigUrl() {
+    default String getDynamicConfigUrl() {
         return "http://localhost:5000";
     }
 
@@ -42,7 +42,7 @@ public interface IEventConfig extends Config {
             name = "Send screenshot",
             description = "Configures whether a message will be automatically sent to discord when you obtain items."
     )
-    default boolean SendScreenshot()
+    default boolean sendScreenshot()
     {
         return false;
     }

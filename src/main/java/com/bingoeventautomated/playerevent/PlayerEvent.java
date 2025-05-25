@@ -1,4 +1,4 @@
-package com.bingoeventautomated.events;
+package com.bingoeventautomated.playerevent;
 
 import net.runelite.api.events.MenuOptionClicked;
 import net.runelite.client.game.ItemManager;
@@ -11,13 +11,13 @@ public class PlayerEvent {
     @Inject
     private ItemManager itemManager;
 
-    public void UpdateInvalidItemList(MenuOptionClicked event) {
+    public void process(MenuOptionClicked event) {
         String menuOption = event.getMenuOption();
-        AddDroppedItemToInvalidItems(event, menuOption);
-        RemoveTakenItemFromInvalidItems(event, menuOption);
+        addDroppedItemToInvalidItems(event, menuOption);
+        removeTakenItemFromInvalidItems(event, menuOption);
     }
 
-    private void AddDroppedItemToInvalidItems(MenuOptionClicked event, String menuOption) {
+    private void addDroppedItemToInvalidItems(MenuOptionClicked event, String menuOption) {
         if (!menuOption.equals("Drop"))
             return;
 
@@ -26,7 +26,7 @@ public class PlayerEvent {
         invalidItems.add(item);
     }
 
-    private void RemoveTakenItemFromInvalidItems(MenuOptionClicked event, String menuOption) {
+    private void removeTakenItemFromInvalidItems(MenuOptionClicked event, String menuOption) {
         if (!menuOption.equals("Take"))
             return;
 

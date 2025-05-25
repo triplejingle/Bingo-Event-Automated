@@ -1,5 +1,7 @@
-package com.bingoeventautomated.Mapper;
+package com.bingoeventautomated.lootsender.Mappers;
 
+import com.bingoeventautomated.lootsender.models.ActionDataItem;
+import com.bingoeventautomated.lootsender.models.ActionDataModel;
 import com.bingoeventautomated.config.IEventConfig;
 import net.runelite.api.Client;
 import net.runelite.api.NPC;
@@ -18,22 +20,25 @@ public class NpcActionDataModelMapper {
     @Inject
     ActionDataItemMapper actionDataItemMapper;
 
-    public ActionDataModel ToActionDataModel(final NpcLootReceived npcLootReceived) {
+    public ActionDataModel toActionDataModel(final NpcLootReceived npcLootReceived) {
         ActionDataModel actionData = new ActionDataModel();
         NPC npc = npcLootReceived.getNpc();
         actionData.itemsource = npc.getName();
         actionData.username = client.getLocalPlayer().getName();
         actionData.eventcode = eventconfig.eventCodeInput();
-        SetBingoTileItems(npcLootReceived, actionData);
+
+        setBingoTileItems(npcLootReceived, actionData);
+
         return actionData;
     }
 
-    private void SetBingoTileItems(NpcLootReceived npcLootReceived, ActionDataModel actionData) {
+    private void setBingoTileItems(NpcLootReceived npcLootReceived, ActionDataModel actionData) {
         Collection<ItemStack> lootList = npcLootReceived.getItems();
+
         Iterator iterator = lootList.iterator();
         while (iterator.hasNext()) {
             ItemStack item = (ItemStack) iterator.next();
-            ActionDataItem actionDataItem = actionDataItemMapper.ToActionDataItem(item);
+            ActionDataItem actionDataItem = actionDataItemMapper.toActionDataItem(item);
             actionData.items.add(actionDataItem);
         }
     }
