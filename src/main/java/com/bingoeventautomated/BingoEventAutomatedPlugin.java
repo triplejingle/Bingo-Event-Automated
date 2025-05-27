@@ -45,7 +45,7 @@ public class BingoEventAutomatedPlugin extends Plugin {
     }
 
     @Provides
-    IEventConfig provideConfig(ConfigManager configManager) {
+    IEventConfig getConfig(ConfigManager configManager) {
         return configManager.getConfig(IEventConfig.class);
     }
 }

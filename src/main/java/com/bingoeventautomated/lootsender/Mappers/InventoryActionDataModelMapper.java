@@ -4,9 +4,10 @@ import com.bingoeventautomated.lootsender.models.ActionDataItem;
 import com.bingoeventautomated.lootsender.models.ActionDataModel;
 import com.bingoeventautomated.config.IEventConfig;
 import net.runelite.api.Client;
-import net.runelite.api.InventoryID;
+import net.runelite.api.gameval.InventoryID;
 import net.runelite.api.ItemContainer;
-import net.runelite.api.widgets.WidgetID;
+import net.runelite.api.gameval.InterfaceID;
+
 import net.runelite.client.game.ItemStack;
 
 import javax.inject.Inject;
@@ -27,45 +28,54 @@ public class InventoryActionDataModelMapper {
     //todo refactor so it conforms to dry
     public String getInventoryName(int widgetId) {
         switch (widgetId) {
-            case WidgetID.BARROWS_REWARD_GROUP_ID:
+            case InterfaceID.BARROWS_REWARD:
                 return "Barrows";
-            case WidgetID.CHAMBERS_OF_XERIC_REWARD_GROUP_ID:
+            case InterfaceID.RAIDS_REWARDS:
                 return "COX";
-            case WidgetID.THEATRE_OF_BLOOD_GROUP_ID:
+            case InterfaceID.TOB_HUD:
                 return "TOB";
-            case WidgetID.TOA_REWARD_GROUP_ID:
+            case InterfaceID.TOA_CHESTS:
                 return "TOA";
-            case WidgetID.FISHING_TRAWLER_REWARD_GROUP_ID:
+            case InterfaceID.TRAWLER_REWARD:
                 return "Fishing Trawler";
-            case WidgetID.WILDERNESS_LOOT_CHEST:
+            case InterfaceID.WILDY_LOOT_CHEST:
                 return "Wilderniss Loot Chest";
+            case InterfaceID.PMOON_REWARD:
+                return "Lunar Chest";
+            case InventoryID.COLOSSEUM_REWARDS:
+                return"Fortis Colosseum";
         }
         return "";
     }
     //todo refactor so it conforms to dry
-    public InventoryID getWidgetId(int widgetId) {
+
+    public int getWidgetId(int widgetId) {
         switch (widgetId) {
-            case WidgetID.BARROWS_REWARD_GROUP_ID:
-                return InventoryID.BARROWS_REWARD;
-            case WidgetID.CHAMBERS_OF_XERIC_REWARD_GROUP_ID:
-                return InventoryID.CHAMBERS_OF_XERIC_CHEST;
-            case WidgetID.THEATRE_OF_BLOOD_GROUP_ID:
-                return InventoryID.THEATRE_OF_BLOOD_CHEST;
-            case WidgetID.TOA_REWARD_GROUP_ID:
-                return InventoryID.TOA_REWARD_CHEST;
-            case WidgetID.FISHING_TRAWLER_REWARD_GROUP_ID:
-                return InventoryID.FISHING_TRAWLER_REWARD;
-            case WidgetID.WILDERNESS_LOOT_CHEST:
-                return InventoryID.WILDERNESS_LOOT_CHEST;
+            case InterfaceID.BARROWS_REWARD:
+                return InventoryID.TRAIL_REWARDINV;
+            case InterfaceID.RAIDS_REWARDS:
+                return InventoryID.RAIDS_REWARDS;
+            case InterfaceID.TOB_HUD:
+                return InventoryID.TOB_CHESTS;
+            case InterfaceID.TOA_CHESTS:
+                return InventoryID.TOA_CHESTS;
+            case InterfaceID.TRAWLER_REWARD:
+                return InventoryID.TRAWLER_REWARDINV;
+            case InterfaceID.WILDY_LOOT_CHEST:
+                return InventoryID.LOOT_INV_ACCESS;
+            case InterfaceID.PMOON_REWARD:
+                return InventoryID.PMOON_REWARDINV;
+            case InterfaceID.COLOSSEUM_REWARD_CHEST_2:
+                return InventoryID.COLOSSEUM_REWARDS;
         }
-        return null;
+        return -1;
     }
 
     public ActionDataModel map(int widgetId) {
         String inventoryName = getInventoryName(widgetId);
         ActionDataModel actionData = new ActionDataModel();
-        InventoryID foundInventory = getWidgetId(widgetId);
-        if (foundInventory == null)
+        int foundInventory = getWidgetId(widgetId);
+        if (foundInventory == -1)
             return actionData;
 
         actionData = inventoryToActionDataModel(foundInventory, inventoryName);
@@ -74,14 +84,14 @@ public class InventoryActionDataModelMapper {
         return actionData;
     }
 
-    private ActionDataModel inventoryToActionDataModel(InventoryID inventoryID, String itemsource) {
+    private ActionDataModel inventoryToActionDataModel(int inventoryID, String itemsource) {
         ActionDataModel actionData = new ActionDataModel();
         actionData.itemsource = itemsource;
         setBingoTileItems(inventoryID, actionData);
         return actionData;
     }
 
-    private void setBingoTileItems(InventoryID inventoryID, ActionDataModel actionData) {
+    private void setBingoTileItems(int inventoryID, ActionDataModel actionData) {
         try {
             Collection<ItemStack> InventoryItemCollection = getItemListFromInventory(inventoryID);
             addInventoryItemsToBingoTileItems(actionData, InventoryItemCollection);
@@ -90,7 +100,7 @@ public class InventoryActionDataModelMapper {
         }
     }
 
-    private Collection<ItemStack> getItemListFromInventory(InventoryID inventoryID) {
+    private Collection<ItemStack> getItemListFromInventory(int inventoryID) {
         ItemContainer container = this.client.getItemContainer(inventoryID);
         Collection<ItemStack> items = new ArrayList<>();
         if (container != null) {

@@ -46,11 +46,14 @@ public interface IEventConfig extends Config {
     {
         return false;
     }
+
     @ConfigItem(
             position = 5,
             keyName = "webhook",
             name = "Discord webhook",
             description = "The webhook used to send messages to Discord."
     )
-    String webhookUrl();
+    default String webhookUrl(){
+        return "http://localhost:5000";
+    }
 }
